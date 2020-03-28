@@ -8,7 +8,8 @@ export class VerifyFinishCodec implements IQCodec {
   encodeQueryContent(query: IQQuery): any | null {
     if (query instanceof QueryVerifyFinish) {
       return {
-        'udid': query.udid,
+        'device-id': query.deviceId,
+        'device-type': query.deviceType,
         signature: query.signature,
         codec: query.codec
       };
@@ -23,7 +24,8 @@ export class VerifyFinishCodec implements IQCodec {
 
   decodeQuery(id: string, content: any): IQQuery | null {
     return new QueryVerifyFinish(id,
-      content['udid'],
+      content['device-id'],
+      content['device-type'],
       content['signature'],
       content['codec']);
   }

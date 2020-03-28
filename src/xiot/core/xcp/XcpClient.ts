@@ -6,15 +6,9 @@ export interface XcpClient {
 
   disconnect(): void;
 
-  getSerialNumber(): string;
-
-  getProductId(): number;
-
-  getProductVersion(): number;
-
-  getUdid(): string;
-
   getDeviceId(): string;
+
+  getDeviceType(): string;
 
   getNextId(): string;
 

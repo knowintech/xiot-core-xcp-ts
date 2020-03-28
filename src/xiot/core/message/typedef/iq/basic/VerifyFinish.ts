@@ -5,13 +5,15 @@ export const VERIFY_FINISH_METHOD = 'urn:xiot:verify-finish';
 
 export class QueryVerifyFinish extends IQQuery {
 
-  public udid: string;
+  public deviceId: string;
+  public deviceType: string;
   public signature: string;
   public codec: number;
 
-  constructor(id: string, udid: string, signature: string, codec: number) {
+  constructor(id: string, deviceId: string, deviceType: string, signature: string, codec: number) {
     super(id, VERIFY_FINISH_METHOD);
-    this.udid = udid;
+    this.deviceId = deviceId;
+    this.deviceType = deviceType;
     this.signature = signature;
     this.codec = codec;
   }

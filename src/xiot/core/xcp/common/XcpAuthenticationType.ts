@@ -1,12 +1,12 @@
 export enum XcpAuthenticationType {
   UNDEFINED,
   DEVICE_ID,
-  PRODUCT_ID,
+  DEVICE_TYPE,
 }
 
 const _XcpAuthenticationTypeMapping: [XcpAuthenticationType, string][] = [
   [XcpAuthenticationType.DEVICE_ID, 'device-id'],
-  [XcpAuthenticationType.PRODUCT_ID, 'product-id'],
+  [XcpAuthenticationType.DEVICE_TYPE, 'device-type'],
 ];
 
 export function XcpAuthenticationTypeToString(type: XcpAuthenticationType): string {

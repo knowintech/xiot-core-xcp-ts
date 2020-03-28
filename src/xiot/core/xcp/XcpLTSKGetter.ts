@@ -4,5 +4,5 @@ export interface XcpLTSKGetter {
 
   getDeviceKeypair(deviceId: string): KeyPair;
 
-  getProductKeyPair(productId: number, productVersion: number): KeyPair;
+  getTypeKeyPair(deviceType: string): KeyPair;
 }

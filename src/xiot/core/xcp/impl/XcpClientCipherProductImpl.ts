@@ -6,18 +6,17 @@ import {Ed25519} from 'mipher';
 
 export class XcpClientCipherProductImpl implements XcpClientCipher {
 
-  constructor(private productId: number,
-              private productVersion: number,
+  constructor(private deviceType: string,
               private getter: XcpLTSKGetter,
               private serverLTPK: Uint8Array) {
   }
 
   getAuthenticationType(): XcpAuthenticationType {
-    return XcpAuthenticationType.PRODUCT_ID;
+    return XcpAuthenticationType.DEVICE_TYPE;
   }
 
   sign(info: Uint8Array): Uint8Array {
-    const keypair = this.getter.getProductKeyPair(this.productId, this.productVersion);
+    const keypair = this.getter.getTypeKeyPair(this.deviceType);
     const e = new Ed25519();
     return e.sign(info, keypair.sk, keypair.pk);
     // return sign(keypair.sk, info);

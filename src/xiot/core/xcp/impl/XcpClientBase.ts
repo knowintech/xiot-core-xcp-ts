@@ -8,12 +8,13 @@ import {WebSocketBinaryFrameCodecImpl} from '../codec/WebSocketBinaryFrameCodecI
 import {BinaryFrameCodec} from '../BinaryFrameCodec';
 import {Utf8ArrayToStr} from '../utils/Uint8ArrayUtils';
 import {IQ, IQError, IQQuery, IQResult, IQType, XcpMessage, XcpMessageCodec} from '../../../..';
-import {OperationStatus, XcpUniversalDID} from 'xiot-core-spec-ts';
+import {OperationStatus} from 'xiot-core-spec-ts';
 
 export class XcpClientBase implements XcpClient {
 
   private ws: WebSocket | null = null;
-  private udid: XcpUniversalDID;
+  private did: string;
+  private type: string;
   private verifier: XcpClientVerifier | null = null;
   private verified = false;
   private frameCodec: BinaryFrameCodec | null = null;
@@ -26,10 +27,11 @@ export class XcpClientBase implements XcpClient {
 
   constructor(serialNumber: string,
               productId: number,
-              productVersion: number,
+              type: string,
               private cipher: XcpClientCipher,
               private codec: XcpFrameCodecType) {
-    this.udid = new XcpUniversalDID(serialNumber, productId, productVersion);
+    this.did = serialNumber + '@' + productId;
+    this.type = type;
     this.messageCodec = new XcpMessageCodec();
     this.resultHandlers = new Map<string, (result: IQResult | null, error: IQError | null) => void>();
     this.queryHandlers = new Map<string, (query: IQQuery) => void>();
@@ -72,28 +74,16 @@ export class XcpClientBase implements XcpClient {
     }
   }
 
-  getSerialNumber(): string {
-    return this.udid.serialNumber;
-  }
-
-  getProductId(): number {
-    return this.udid.productId;
-  }
-
-  getProductVersion(): number {
-    return this.udid.productVersion;
-  }
-
-  getUdid(): string {
-    return this.udid.toString();
-  }
-
   getDeviceId(): string {
-    return this.udid.did;
+    return this.did;
+  }
+
+  getDeviceType(): string {
+    return this.type;
   }
 
   getNextId(): string {
-    return this.udid.toString() + '#' + Date.now() + '#' + this.messageId++;
+    return Date.now() + '#' + this.messageId++;
   }
 
   addQueryHandler(method: string, handler: (query: IQQuery) => void): void {

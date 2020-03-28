@@ -6,7 +6,8 @@
         "to": "bbb",
         "id": "3001",
         "content": {
-          "udid": "xxxx@10001/1",
+          "device-id": "xxxx@10001",
+          "device-type": "urn:knowin-spec:device:bridge:00000002:seed:insight:1",
           "signature": "xxxx",
           "codec": 0
         }
