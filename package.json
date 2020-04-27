@@ -1,6 +1,6 @@
 {
   "name": "xiot-core-xcp-ts",
-  "version": "0.21.0",
+  "version": "0.21.1",
   "description": "XCP Protocol",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/gkcity/xiot-core-xcp-ts#readme",
   "dependencies": {
-    "@stablelib/chacha20poly1305": "^0.10.2",
+    "@stablelib/chacha20poly1305": "^0.10.3",
     "@stablelib/ed25519": "^0.7.2",
     "@stablelib/hkdf": "^0.7.2",
     "@stablelib/sha512": "^0.7.2",
