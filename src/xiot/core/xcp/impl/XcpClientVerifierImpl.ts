@@ -10,14 +10,13 @@ import {XcpKeyType} from '../key/XcpKeyType';
 import {Base642Bin, Bin2Base64, BytesJoin, StringToUint8Array} from '../utils/Uint8ArrayUtils';
 import {ChaCha20Poly1305} from '@stablelib/chacha20poly1305';
 import {IQResult, QueryInitialize, QueryVerifyFinish, QueryVerifyStart, ResultVerifyFinish, ResultVerifyStart} from '../../../..';
-import {X25519KeyAgreement, generateKeyPairFromSeed} from '@stablelib/x25519';
-// import {randomBytes} from '@stablelib/random';
+import {Curve25519, Random} from 'mipher';
+
 export class XcpClientVerifierImpl implements XcpClientVerifier {
 
-    private sharedKey: Uint8Array | null = null ;
+    private sharedKey: Uint8Array | null = null;
     private verifyKey: Uint8Array | null = null;
     private sessionInfo: Uint8Array | null = null;
-    private keyAgreement: X25519KeyAgreement |null = null ;
 
     constructor(private client: XcpClient,
                 private version: string,
@@ -37,26 +36,12 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
         return this.client.sendQuery(query).then(() => this.generateKeyPair());
     }
 
-    // private generateKeyPair(): KeyPair {
-    //   const random = new Random();
-    //   const c = new Curve25519();
-    //   const seed = random.get(32);
-    //   const k = c.generateKeys(seed);
-    //   return new KeyPair(k.pk, k.sk);
-    // }
-
-    // private generateKeyPair(): Uint8Array {
-    //   this.keyAgreement = new X25519KeyAgreement();
-    //   return this.keyAgreement.offer();
-    // }
-
     private generateKeyPair(): KeyPair {
-       // const random = Math.random().toString(32);
-        // const random = randomBytes(32);
-        const  random = this.randomWord(true, 32, 32);
-        const seed = StringToUint8Array(random);
-       const c =  generateKeyPairFromSeed(seed);
-        return new KeyPair(c.publicKey, c.secretKey);
+      const random = new Random();
+      const c = new Curve25519();
+      const seed = random.get(32);
+      const k = c.generateKeys(seed);
+      return new KeyPair(k.pk, k.sk);
     }
 
     private verifyStart(keyPair: KeyPair): Promise<Uint8Array> {
@@ -68,7 +53,7 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
     }
 
     private parseResultVerifyStart(keyPair: KeyPair, x: IQResult): Uint8Array {
-        if (! (x instanceof ResultVerifyStart)) {
+        if (!(x instanceof ResultVerifyStart)) {
             throw new Error('invalid result');
         }
 
@@ -77,15 +62,15 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
         const serverPublicKey = Base642Bin(x.publicKey);
         const serverEncryptedSignature = Base642Bin(x.signature);
 
-        this.keyAgreement = new X25519KeyAgreement();
-        this.sharedKey = this.keyAgreement.getSharedKey();
+        // this.keyAgreement = new X25519KeyAgreement();
+        // this.sharedKey = this.keyAgreement.getSharedKey();
 
-        // const c = new Curve25519();
-        // this.sharedKey = c.scalarMult(keyPair.sk, serverPublicKey);
+        const c = new Curve25519();
+        this.sharedKey = c.scalarMult(keyPair.sk, serverPublicKey);
         // console.log('SharedKey: ', Convert.bin2base64(this.sharedKey));
-        console.log('SharedKey: ', Bin2Base64( this.sharedKey));
+        console.log('SharedKey: ', Bin2Base64(this.sharedKey));
 
-        this.verifyKey = XcpKeyCreator.create( this.sharedKey, XcpKeyType.SESSION_VERIFY_ENCRYPT_KEY);
+        this.verifyKey = XcpKeyCreator.create(this.sharedKey, XcpKeyType.SESSION_VERIFY_ENCRYPT_KEY);
         if (this.verifyKey != null) {
             // console.log('VerifyKey: ', Convert.bin2base64(this.verifyKey));
             console.log('VerifyKey: ', Bin2Base64(this.verifyKey));
@@ -110,7 +95,7 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
             throw new Error('decode serverSignature failed, serverSignature is null');
         }
 
-        if (! this.cipher.verify(this.sessionInfo, serverSignature)) {
+        if (!this.cipher.verify(this.sessionInfo, serverSignature)) {
             console.log('server signature verified failed');
             throw new Error('server signature verified failed');
         }
@@ -132,7 +117,7 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
     }
 
     private parseResultVerifyFinish(x: IQResult): XcpSessionKey {
-        if (! (x instanceof ResultVerifyFinish)) {
+        if (!(x instanceof ResultVerifyFinish)) {
             throw new Error('invalid result');
         }
 
@@ -156,26 +141,5 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
         console.log('inKey: ', Bin2Base64(inKey));
 
         return new XcpSessionKey(this.codec, outKey, inKey);
-    }
-
-    /**
-     * 生成随机数
-     */
-    private  randomWord(randomFlag: boolean, min: number, max: number) {
-            let str = '';
-            let range = min;
-             const  arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
-                    'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
-                    'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-
-            // 随机产生
-            if (randomFlag) {
-                range = Math.round(Math.random() * (max - min)) + min;
-            }
-            for (let i = 0; i < range;  i++) {
-               const pos = Math.round(Math.random() * (arr.length - 1));
-                str += arr[pos];
-            }
-            return str;
     }
 }
