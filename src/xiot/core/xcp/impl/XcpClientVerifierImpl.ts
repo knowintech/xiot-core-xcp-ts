@@ -10,10 +10,12 @@ import {XcpKeyType} from '../key/XcpKeyType';
 import {Base642Bin, Bin2Base64, BytesJoin, StringToUint8Array} from '../utils/Uint8ArrayUtils';
 import {ChaCha20Poly1305} from '@stablelib/chacha20poly1305';
 import {IQResult, QueryInitialize, QueryVerifyFinish, QueryVerifyStart, ResultVerifyFinish, ResultVerifyStart} from '../../../..';
-import {Curve25519, Random} from 'mipher';
+// import * as NodeRSA from 'node-rsa';
+ import {Curve25519, Random} from 'mipher';
+
+
 
 export class XcpClientVerifierImpl implements XcpClientVerifier {
-
     private sharedKey: Uint8Array | null = null;
     private verifyKey: Uint8Array | null = null;
     private sessionInfo: Uint8Array | null = null;
@@ -42,7 +44,20 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
       const seed = random.get(32);
       const k = c.generateKeys(seed);
       return new KeyPair(k.pk, k.sk);
+
+
     }
+
+    // private  generateKeyPair(): KeyPair {
+    //     const key = new NodeRSA({b: 32 });
+    //     const publicKey  = key.exportKey('pkcs8-public-pem');  // 公钥
+    //     const  privateKey = key.exportKey('pkcs1-private-pem'); // 私钥
+    //     return new KeyPair(StringToUint8Array(publicKey), StringToUint8Array(privateKey));
+    // }
+
+
+
+
 
     private verifyStart(keyPair: KeyPair): Promise<Uint8Array> {
         // const publicKey = Convert.bin2base64(keyPair.pk);
@@ -65,8 +80,9 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
         // this.keyAgreement = new X25519KeyAgreement();
         // this.sharedKey = this.keyAgreement.getSharedKey();
 
-        const c = new Curve25519();
-        this.sharedKey = c.scalarMult(keyPair.sk, serverPublicKey);
+       // const c = new Curve25519();
+        // this.sharedKey = c.scalarMult(keyPair.sk, serverPublicKey);
+        this.sharedKey = new Uint8Array(32);
         // console.log('SharedKey: ', Convert.bin2base64(this.sharedKey));
         console.log('SharedKey: ', Bin2Base64(this.sharedKey));
 

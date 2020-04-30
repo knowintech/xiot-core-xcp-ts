@@ -8,6 +8,15 @@ export function StringToUint8Array(s: string): Uint8Array {
     return array;
 }
 
+export  function Unit8ArrayToString(fileData: Uint8Array): string {
+    let dataString = '';
+    for (let i = 0; i < fileData.length; i++) {
+        dataString += String.fromCharCode(fileData[i]);
+    }
+
+    return dataString;
+}
+
 /**
  * copy from mipher
  */
