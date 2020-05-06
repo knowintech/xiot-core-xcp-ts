@@ -31,4 +31,6 @@ export * from './xiot/core/xcp/common/XcpConstant';
 export * from './xiot/core/xcp/common/XcpFrameCodecType';
 export * from './xiot/core/xcp/common/XcpSessionKey';
 export * from './xiot/core/xcp/utils/Uint8ArrayUtils';
+export * from './xiot/core/xcp/utils/mipher/dist';
+
 

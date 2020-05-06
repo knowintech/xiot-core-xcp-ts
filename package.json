@@ -1,6 +1,6 @@
 {
   "name": "xiot-core-xcp-ts",
-  "version": "0.22.16",
+  "version": "0.22.24",
   "description": "XCP Protocol",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -32,7 +32,6 @@
     "@stablelib/hkdf": "^1.0.0",
     "@stablelib/sha512": "^1.0.0",
     "buffer": "^5.2.1",
-    "mipher": "^1.1.5",
     "crypto-js": "^4.0.0",
     "xiot-core-spec-ts": "^0.22.14"
   },
@@ -48,5 +47,8 @@
     "typescript": "^3.1.6",
     "typings": "^2.1.1",
     "yajsondiff": "^2.0.0"
+  },
+  "browser": {
+    "crypto": false
   }
 }

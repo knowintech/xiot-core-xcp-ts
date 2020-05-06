@@ -11,7 +11,7 @@ import {Base642Bin, Bin2Base64, BytesJoin, StringToUint8Array} from '../utils/Ui
 import {ChaCha20Poly1305} from '@stablelib/chacha20poly1305';
 import {IQResult, QueryInitialize, QueryVerifyFinish, QueryVerifyStart, ResultVerifyFinish, ResultVerifyStart} from '../../../..';
 // import * as NodeRSA from 'node-rsa';
- import {Curve25519, Random} from 'mipher';
+ import {Curve25519} from '../utils/mipher/dist';
 
 
 
@@ -39,25 +39,15 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
     }
 
     private generateKeyPair(): KeyPair {
-      const random = new Random();
+    //  const random = new Random();
       const c = new Curve25519();
-      const seed = random.get(32);
+      // const seed = random.get(32);
+      const seed = this.getNum();
       const k = c.generateKeys(seed);
       return new KeyPair(k.pk, k.sk);
 
 
     }
-
-    // private  generateKeyPair(): KeyPair {
-    //     const key = new NodeRSA({b: 32 });
-    //     const publicKey  = key.exportKey('pkcs8-public-pem');  // 公钥
-    //     const  privateKey = key.exportKey('pkcs1-private-pem'); // 私钥
-    //     return new KeyPair(StringToUint8Array(publicKey), StringToUint8Array(privateKey));
-    // }
-
-
-
-
 
     private verifyStart(keyPair: KeyPair): Promise<Uint8Array> {
         // const publicKey = Convert.bin2base64(keyPair.pk);
@@ -158,4 +148,17 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
 
         return new XcpSessionKey(this.codec, outKey, inKey);
     }
+
+    // 生成32位随机数
+ private getNum(): Uint8Array {
+    const chars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];  
+    let nums = '';
+    for (let i = 0; i < 32; i++) {
+        const id = Math.random() * 61;
+        nums += chars[id];
+    }
+    const numsArray = StringToUint8Array(nums);
+    return numsArray;
+        }
+
 }
