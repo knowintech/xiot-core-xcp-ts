@@ -11,7 +11,7 @@ import {Base642Bin, Bin2Base64, BytesJoin, StringToUint8Array} from '../utils/Ui
 import {ChaCha20Poly1305} from '@stablelib/chacha20poly1305';
 import {IQResult, QueryInitialize, QueryVerifyFinish, QueryVerifyStart, ResultVerifyFinish, ResultVerifyStart} from '../../../..';
 // import * as NodeRSA from 'node-rsa';
- import {Curve25519} from '../utils/mipher/dist';
+ import {Curve25519, Random} from '../utils/mipher/dist';
 
 
 
@@ -39,10 +39,10 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
     }
 
     private generateKeyPair(): KeyPair {
-    //  const random = new Random();
+      const random = new Random();
       const c = new Curve25519();
-      // const seed = random.get(32);
-      const seed = this.getNum();
+      const seed = random.get(32);
+      // const seed = this.getNum();
       const k = c.generateKeys(seed);
       return new KeyPair(k.pk, k.sk);
 
@@ -70,9 +70,9 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
         // this.keyAgreement = new X25519KeyAgreement();
         // this.sharedKey = this.keyAgreement.getSharedKey();
 
-       // const c = new Curve25519();
-        // this.sharedKey = c.scalarMult(keyPair.sk, serverPublicKey);
-        this.sharedKey = new Uint8Array(32);
+        const c = new Curve25519();
+        this.sharedKey = c.scalarMult(keyPair.sk, serverPublicKey);
+       //  this.sharedKey = new Uint8Array(32);
         // console.log('SharedKey: ', Convert.bin2base64(this.sharedKey));
         console.log('SharedKey: ', Bin2Base64(this.sharedKey));
 
@@ -148,17 +148,4 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
 
         return new XcpSessionKey(this.codec, outKey, inKey);
     }
-
-    // 生成32位随机数
- private getNum(): Uint8Array {
-    const chars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];  
-    let nums = '';
-    for (let i = 0; i < 32; i++) {
-        const id = Math.random() * 61;
-        nums += chars[id];
-    }
-    const numsArray = StringToUint8Array(nums);
-    return numsArray;
-        }
-
 }
