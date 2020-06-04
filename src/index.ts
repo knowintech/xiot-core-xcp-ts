@@ -7,7 +7,7 @@ export * from './xiot/core/message/typedef/iq/basic/Byebye';
 export * from './xiot/core/message/typedef/iq/basic/Ping';
 export * from './xiot/core/message/typedef/iq/device/control/GetChildren';
 export * from './xiot/core/message/typedef/iq/device/control/GetProperties';
-export * from './xiot/core/message/typedef/iq/device/control/InvokeAction';
+export * from './xiot/core/message/typedef/iq/device/control/InvokeActions';
 export * from './xiot/core/message/typedef/iq/device/control/SetProperties';
 export * from './xiot/core/message/typedef/iq/device/verify/Initialize';
 export * from './xiot/core/message/typedef/iq/device/key/SetAccessKey';

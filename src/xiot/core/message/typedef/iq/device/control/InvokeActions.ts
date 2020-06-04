@@ -4,7 +4,7 @@ import {ActionOperation} from 'xiot-core-spec-ts';
 
 export const INVOKE_ACTIONS_METHOD = 'urn:xiot:invoke-actions';
 
-export class QueryInvokeAction extends IQQuery {
+export class QueryInvokeActions extends IQQuery {
 
     public actions: ActionOperation[] = [];
 
@@ -13,12 +13,12 @@ export class QueryInvokeAction extends IQQuery {
         this.actions = actions;
     }
 
-    public result(actions: ActionOperation[]): ResultInvokeAction {
-        return new ResultInvokeAction(this.id, actions);
+    public result(actions: ActionOperation[]): ResultInvokeActions {
+        return new ResultInvokeActions(this.id, actions);
     }
 }
 
-export class ResultInvokeAction extends IQResult {
+export class ResultInvokeActions extends IQResult {
 
     public actions: ActionOperation[] = [];
 

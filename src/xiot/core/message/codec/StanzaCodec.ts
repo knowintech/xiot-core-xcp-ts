@@ -10,7 +10,7 @@ import {SetPropertiesCodec} from './iq/device/control/SetPropertiesCodec';
 import {SET_PROPERTIES_METHOD} from '../../../..';
 import {GetPropertiesCodec} from './iq/device/control/GetPropertiesCodec';
 import {GET_PROPERTIES_METHOD} from '../../../..';
-import {InvokeActionCodec} from './iq/device/control/InvokeActionCodec';
+import {InvokeActionsCodec} from './iq/device/control/InvokeActionsCodec';
 import {INVOKE_ACTIONS_METHOD} from '../../../..';
 import {GetAccessKeyCodec} from './iq/device/key/GetAccessKeyCodec';
 import {SetAccessKeyCodec} from './iq/device/key/SetAccessKeyCodec';
@@ -46,7 +46,7 @@ export class StanzaCodec {
 
         this.iqCodecs.set(SET_PROPERTIES_METHOD, new SetPropertiesCodec());
         this.iqCodecs.set(GET_PROPERTIES_METHOD, new GetPropertiesCodec());
-        this.iqCodecs.set(INVOKE_ACTIONS_METHOD, new InvokeActionCodec());
+        this.iqCodecs.set(INVOKE_ACTIONS_METHOD, new InvokeActionsCodec());
         this.iqCodecs.set(GET_CHILDREN_METHOD, new GetChildrenCodec());
         this.iqCodecs.set(GET_SUMMARIES_METHOD, new GetSummariesCodec());
 

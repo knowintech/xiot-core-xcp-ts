@@ -1,13 +1,13 @@
 import {IqCodec} from '../../../IqCodec';
 import {IQQuery} from '../../../../../../..';
 import {IQResult} from '../../../../../../..';
-import {QueryInvokeAction, ResultInvokeAction} from '../../../../../../..';
+import {QueryInvokeActions, ResultInvokeActions} from '../../../../../../..';
 import {ActionOperationCodec} from 'xiot-core-spec-ts';
 
-export class InvokeActionCodec implements IqCodec {
+export class InvokeActionsCodec implements IqCodec {
 
     encodeQueryContent(query: IQQuery): any | null {
-        if (query instanceof QueryInvokeAction) {
+        if (query instanceof QueryInvokeActions) {
             return ActionOperationCodec.encodeQuery(query.actions);
         }
 
@@ -15,7 +15,7 @@ export class InvokeActionCodec implements IqCodec {
     }
 
     encodeResultContent(result: IQResult): any | null {
-        if (result instanceof ResultInvokeAction) {
+        if (result instanceof ResultInvokeActions) {
             return {
                 actions: ActionOperationCodec.encodeResultArray(result.actions)
             };
@@ -25,12 +25,12 @@ export class InvokeActionCodec implements IqCodec {
     }
 
     decodeQuery(id: string, content: any): IQQuery | null {
-        return new QueryInvokeAction(id, ActionOperationCodec.decodeQueryArray(content.actions));
+        return new QueryInvokeActions(id, ActionOperationCodec.decodeQueryArray(content.actions));
     }
 
     decodeResult(id: string, content: any): IQResult | null {
         const actions = ActionOperationCodec.decodeResultArray(content.actions);
-        return new ResultInvokeAction(id, actions);
+        return new ResultInvokeActions(id, actions);
     }
 }
 
