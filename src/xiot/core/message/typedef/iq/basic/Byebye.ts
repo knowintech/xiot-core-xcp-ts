@@ -10,10 +10,7 @@ export class QueryByebye extends IQQuery {
   }
 
   public result(): ResultByebye {
-    const result = new ResultByebye(this.id);
-    result.from = this.to;
-    result.to = this.from;
-    return result;
+    return new ResultByebye(this.id);
   }
 }
 

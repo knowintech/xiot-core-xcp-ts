@@ -10,10 +10,7 @@ export class QueryPing extends IQQuery {
   }
 
   public result(): ResultPing {
-    const result = new ResultPing(this.id);
-    result.from = this.to;
-    result.to = this.from;
-    return result;
+    return new ResultPing(this.id);
   }
 }
 

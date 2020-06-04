@@ -1,0 +1,11 @@
+{
+    "iq": {
+        "type": "query",
+        "method": "urn:xiot:initialize",
+        "id": "1",
+        "content": {
+            "version": "1.0",
+            "authentication": "did"
+        }
+    }
+}

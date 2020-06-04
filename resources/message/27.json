@@ -2,8 +2,6 @@
   "iq": {
     "type": "query",
     "method": "urn:xiot:children-removed",
-    "from": "xxxx",
-    "to": "xxxx",
     "id": "5012",
     "content": {
       "children": [

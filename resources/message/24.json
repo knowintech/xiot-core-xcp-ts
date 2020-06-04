@@ -2,8 +2,6 @@
   "iq": {
     "type": "result",
     "method": "urn:xiot:get-children",
-    "from": "xxxx",
-    "to": "xxxx",
     "id": "5009",
     "content": {
       "children": [

@@ -3,8 +3,6 @@
       "iq": {
         "type": "result",
         "method": "urn:xiot:verify-finish",
-        "from": "xxx",
-        "to": "xxx",
         "id": "3001"
       }
     }

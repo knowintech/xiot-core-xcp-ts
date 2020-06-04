@@ -1,0 +1,10 @@
+{
+    "iq": {
+        "type": "query",
+        "method": "urn:xiot:get-children",
+        "id": "5010",
+        "content": {
+            "did": "xxb"
+        }
+    }
+}

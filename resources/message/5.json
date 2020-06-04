@@ -2,8 +2,6 @@
       "iq": {
         "type": "query",
         "method": "urn:xiot:verify-finish",
-        "from": "aaa",
-        "to": "bbb",
         "id": "3001",
         "content": {
           "device-id": "xxxx@10001",

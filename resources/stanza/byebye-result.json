@@ -1,0 +1,7 @@
+{
+    "iq": {
+        "type": "result",
+        "method": "urn:xiot:bye-bye",
+        "id": "5009"
+    }
+}

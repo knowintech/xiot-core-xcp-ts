@@ -1,0 +1,13 @@
+{
+    "iq": {
+        "id": "425",
+        "type": "query",
+        "method": "urn:xiot:get-summaries",
+        "content": {
+            "devices": [
+                "aaa",
+                "bbb"
+            ]
+        }
+    }
+}

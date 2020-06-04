@@ -1,0 +1,10 @@
+{
+    "iq": {
+        "id": "0",
+        "type": "error",
+        "content": {
+            "status": -3,
+            "description": "action not found"
+        }
+    }
+}

@@ -2,8 +2,6 @@
   "iq": {
     "type": "result",
     "method": "urn:xiot:set-properties",
-    "from": "xxxx",
-    "to": "xxxx",
     "id": "5004",
     "content": {
       "properties": [

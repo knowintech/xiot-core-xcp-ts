@@ -34,7 +34,7 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
 
     private initialization(): Promise<KeyPair> {
         const auth = XcpAuthenticationTypeToString(this.cipher.getAuthenticationType());
-        const query = new QueryInitialize(this.client.getNextId(), this.version, auth);
+        const query = new QueryInitialize(this.client.getNextStanzaId(), this.version, auth);
         return this.client.sendQuery(query).then(() => this.generateKeyPair());
     }
 
@@ -53,7 +53,7 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
         // const publicKey = Convert.bin2base64(keyPair.pk);
         const publicKey = Bin2Base64(keyPair.pk);
         console.log('verifyStart publicKey: ' + publicKey);
-        const query = new QueryVerifyStart(this.client.getNextId(), publicKey);
+        const query = new QueryVerifyStart(this.client.getNextStanzaId(), publicKey);
         return this.client.sendQuery(query).then(x => this.parseResultVerifyStart(keyPair, x));
     }
 
@@ -116,7 +116,7 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
         // const deviceType = Convert.bin2base64(cc.seal(StringToUint8Array('SV-Msg03'), StringToUint8Array(this.client.getDeviceType())));
         const deviceId = Bin2Base64(cc.seal(StringToUint8Array('SV-Msg03'), StringToUint8Array(this.client.getDeviceId())));
         const deviceType = Bin2Base64(cc.seal(StringToUint8Array('SV-Msg03'), StringToUint8Array(this.client.getDeviceType())));
-        const id = this.client.getNextId();
+        const id = this.client.getNextStanzaId();
         const frameCodecType = XcpFrameCodecTypeToNumber(this.codec);
         const query = new QueryVerifyFinish(id, deviceId, deviceType, encryptedSignature, frameCodecType);
         return this.client.sendQuery(query).then(x => this.parseResultVerifyFinish(x));

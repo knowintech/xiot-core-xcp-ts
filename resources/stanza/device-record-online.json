@@ -1,0 +1,18 @@
+{
+    "message": {
+        "id": "1",
+        "topic": "urn:xiot:device",
+        "type": "online",
+        "payload": {
+            "did": "xxx",
+            "summary": {
+                "type": "urn:homekit-spec:group:lightbulb:00000005:yingtuo:zzz:1",
+                "online": true,
+                "protocol": "zigbee",
+                "dependencies": ["aaa", "bbb", "ccc"],
+                "interoperations": ["fff"],
+                "accesspoint": ""
+            }
+        }
+    }
+}

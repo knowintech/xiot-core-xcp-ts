@@ -1,0 +1,21 @@
+{
+    "iq": {
+        "type": "result",
+        "method": "urn:xiot:get-children",
+        "id": "5009",
+        "content": {
+            "children": [
+                {
+                    "did": "1",
+                    "type": "urn:homekit-spec:device:outlet:00000a01:abc:aaa:1",
+                    "protocol": "zigbee"
+                },
+                {
+                    "did": "2",
+                    "type": "urn:homekit-spec:device:motion-sensor:00000a11:abc:bbb:2",
+                    "protocol": "btmesh"
+                }
+            ]
+        }
+    }
+}

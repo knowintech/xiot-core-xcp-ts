@@ -1,4 +1,4 @@
-import {IQError, IQQuery, IQResult} from '../../..';
+import {IQError, IQQuery, IQResult, Message} from '../../..';
 
 export interface XcpClient {
 
@@ -10,7 +10,7 @@ export interface XcpClient {
 
   getDeviceType(): string;
 
-  getNextId(): string;
+  getNextStanzaId(): string;
 
   addQueryHandler(method: string, handler: (query: IQQuery) => void): void;
 
@@ -21,4 +21,6 @@ export interface XcpClient {
   sendResult(result: IQResult): void;
 
   sendError(error: IQError): void;
+
+  sendMessage(message: Message): void;
 }

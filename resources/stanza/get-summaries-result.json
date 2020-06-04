@@ -1,0 +1,23 @@
+{
+    "iq": {
+        "id": "425",
+        "type": "result",
+        "method": "urn:xiot:get-summaries",
+        "content": {
+            "devices": [
+                {
+                    "did": "aaa",
+                    "summary": {
+                        "type": "urn:k-spec:device:light:00001111:a:b:1",
+                        "online": true,
+                        "protocol": "zigbee",
+                        "groups": ["aaa"],
+                        "dependencies": ["ccc", "aaa"],
+                        "interoperations": ["xxx", "yyy"],
+                        "accesspoint": "a"
+                    }
+                }
+            ]
+        }
+    }
+}
