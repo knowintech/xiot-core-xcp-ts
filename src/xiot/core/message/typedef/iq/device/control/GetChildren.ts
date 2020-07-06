@@ -1,6 +1,6 @@
 import {IQQuery} from '../../IQQuery';
 import {IQResult} from '../../IQResult';
-import {DeviceChild} from 'xiot-core-spec-ts';
+import {Child} from 'xiot-core-spec-ts';
 
 export const GET_CHILDREN_METHOD = 'urn:xiot:get-children';
 
@@ -13,16 +13,16 @@ export class QueryGetChildren extends IQQuery {
         this.did = did;
     }
 
-    public result(children: DeviceChild[]): ResultGetChildren {
+    public result(children: Child[]): ResultGetChildren {
         return new ResultGetChildren(this.id, children);
     }
 }
 
 export class ResultGetChildren extends IQResult {
 
-    public children: DeviceChild[];
+    public children: Child[];
 
-    constructor(id: string, children: DeviceChild[]) {
+    constructor(id: string, children: Child[]) {
         super(id, GET_CHILDREN_METHOD);
         this.children = children;
     }

@@ -4,7 +4,6 @@
         "topic": "urn:xiot:device",
         "type": "event-occurred",
         "payload": {
-            "did": "xxx",
             "event": {
                 "eid": "eee.1.1",
                 "arguments": [

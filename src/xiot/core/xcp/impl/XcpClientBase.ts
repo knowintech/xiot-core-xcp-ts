@@ -8,7 +8,7 @@ import {WebSocketBinaryFrameCodecImpl} from '../codec/WebSocketBinaryFrameCodecI
 import {BinaryFrameCodec} from '../BinaryFrameCodec';
 import {Utf8ArrayToStr} from '../../../..';
 import {IQ, IQError, IQQuery, IQResult, IQType, Message, Stanza, StanzaCodec} from '../../../..';
-import {OperationStatus} from 'xiot-core-spec-ts';
+import {Status} from 'xiot-core-spec-ts';
 
 export class XcpClientBase implements XcpClient {
 
@@ -22,10 +22,8 @@ export class XcpClientBase implements XcpClient {
     private resultHandlers: Map<string, (result: IQResult | null, error: IQError | null) => void>;
     private queryHandlers: Map<string, (query: IQQuery) => void>;
     private messageId = 1;
-    private verifyHandler: (result: boolean) => void = () => {
-    };
-    private disconnectHandler: () => void = () => {
-    };
+    private verifyHandler: (result: boolean) => void = () => {};
+    private disconnectHandler: () => void = () => {};
 
     constructor(serialNumber: string,
                 productId: number,
@@ -200,7 +198,7 @@ export class XcpClientBase implements XcpClient {
         if (handler != null) {
             handler(query);
         } else {
-            this.sendError(query.error(OperationStatus.UNDEFINED, 'Query Handler not found'));
+            this.sendError(query.error(Status.UNDEFINED, 'Query Handler not found'));
         }
     }
 

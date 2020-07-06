@@ -4,7 +4,6 @@
         "topic": "urn:xiot:device",
         "type": "properties-changed",
         "payload": {
-            "did": "xxx",
             "properties": [
                 {
                     "pid": "47a5521d-4d28-4ad1-8126-03bd2910bcdc.1.1",

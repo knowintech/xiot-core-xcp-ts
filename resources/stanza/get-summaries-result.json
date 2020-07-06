@@ -10,10 +10,10 @@
                     "summary": {
                         "type": "urn:k-spec:device:light:00001111:a:b:1",
                         "online": true,
-                        "protocol": "zigbee",
+                        "parentId": "ccc",
                         "groups": ["aaa"],
-                        "dependencies": ["ccc", "aaa"],
                         "interoperations": ["xxx", "yyy"],
+                        "protocol": "zigbee",
                         "accesspoint": "a"
                     }
                 }

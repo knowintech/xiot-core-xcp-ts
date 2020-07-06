@@ -18,10 +18,10 @@ export class GetSummariesCodec implements IqCodec {
         if (result instanceof ResultGetSummaries) {
             const devices: any[] = [];
 
-            result.devices.forEach((summary, did) => {
+            result.devices.forEach((s, did) => {
                 devices.push({
                     did,
-                    summary: SummaryCodec.encode(summary)
+                    summary: SummaryCodec.encodeObject(s)
                 });
             });
 

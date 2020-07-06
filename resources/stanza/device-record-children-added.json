@@ -8,13 +8,23 @@
             "children": [
                 {
                     "did": "08:00:27:87:53:C5@25",
-                    "type": "urn:homekit-spec:device:bridge:00000002:yingtuo:hhh:1",
-                    "protocol": "zigbee"
+                    "summary": {
+                        "type": "urn:homekit-spec:device:bridge:00000002:yingtuo:hhh:1",
+                        "online": false,
+                        "protocol": "zigbee",
+                        "parentId": "xxx",
+                        "interoperations": ["fff"]
+                    }
                 },
                 {
                     "did": "08:00:27:87:53:xx@26",
-                    "type": "urn:homekit-spec:device:bridge:00000002:yingtuo:hhh:1",
-                    "protocol": "btmesh"
+                    "summary": {
+                        "type": "urn:homekit-spec:device:bridge:00000002:yingtuo:hhh:1",
+                        "online": false,
+                        "protocol": "btmesh",
+                        "parentId": "xxx",
+                        "interoperations": ["fff"]
+                    }
                 }
             ]
         }

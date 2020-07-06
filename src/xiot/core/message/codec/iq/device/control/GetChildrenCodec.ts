@@ -2,7 +2,7 @@ import {IqCodec} from '../../../IqCodec';
 import {IQQuery} from '../../../../../../..';
 import {IQResult} from '../../../../../../..';
 import {QueryGetChildren, ResultGetChildren} from '../../../../../../..';
-import {DeviceChildCodec} from 'xiot-core-spec-ts';
+import {ChildCodec} from 'xiot-core-spec-ts';
 
 export class GetChildrenCodec implements IqCodec {
 
@@ -16,7 +16,7 @@ export class GetChildrenCodec implements IqCodec {
 
     encodeResultContent(result: IQResult): any | null {
         if (result instanceof ResultGetChildren) {
-            return {children: DeviceChildCodec.encodeArray(result.children)};
+            return {children: ChildCodec.encodeArray(result.children)};
         }
 
         return null;
@@ -28,7 +28,7 @@ export class GetChildrenCodec implements IqCodec {
     }
 
     decodeResult(id: string, content: any): IQResult | null {
-        return new ResultGetChildren(id, DeviceChildCodec.decodeArray(content['children']));
+        return new ResultGetChildren(id, ChildCodec.decodeArray(content['children']));
     }
 }
 

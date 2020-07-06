@@ -6,16 +6,8 @@
         "payload": {
             "did": "xxx",
             "children": [
-                {
-                    "did": "08:00:27:87:53:C5@25",
-                    "type": "urn:homekit-spec:device:bridge:00000002:yingtuo:hhh:1",
-                    "protocol": "zigbee"
-                },
-                {
-                    "did": "08:00:27:87:53:xx@26",
-                    "type": "urn:homekit-spec:device:bridge:00000002:yingtuo:hhh:1",
-                    "protocol": "btmesh"
-                }
+                "08:00:27:87:53:C5@25",
+                "08:00:27:87:53:xx@26"
             ]
         }
     }
