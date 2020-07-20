@@ -1,4 +1,4 @@
-import {DeviceMessage, Message} from '../../../../../..';
+import {DeviceMessage, Message} from '../../../../../../index';
 import {MessageCodec} from '../../MessageCodec';
 import {DeviceRecordCodec, DeviceRecordTypeFromString} from 'xiot-core-spec-ts';
 

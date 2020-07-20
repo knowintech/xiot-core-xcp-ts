@@ -1,7 +1,7 @@
 import {IqCodec} from '../../../IqCodec';
-import {IQQuery} from '../../../../../../..';
-import {IQResult} from '../../../../../../..';
-import {QuerySetProperties, ResultSetProperties} from '../../../../../../..';
+import {IQQuery} from '../../../../../../../index';
+import {IQResult} from '../../../../../../../index';
+import {QuerySetProperties, ResultSetProperties} from '../../../../../../../index';
 import {PropertyOperationCodec} from 'xiot-core-spec-ts';
 
 export class SetPropertiesCodec implements IqCodec {

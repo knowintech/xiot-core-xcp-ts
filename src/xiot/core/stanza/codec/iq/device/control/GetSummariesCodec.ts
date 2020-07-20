@@ -1,6 +1,6 @@
 import {IqCodec} from '../../../IqCodec';
-import {IQQuery} from '../../../../../../..';
-import {IQResult} from '../../../../../../..';
+import {IQQuery} from '../../../../../../../index';
+import {IQResult} from '../../../../../../../index';
 import {Summary, SummaryCodec} from 'xiot-core-spec-ts';
 import {QueryGetSummaries, ResultGetSummaries} from '../../../../typedef/iq/device/control/GetSummaries';
 

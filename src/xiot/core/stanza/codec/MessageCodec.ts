@@ -1,4 +1,4 @@
-import {Message} from '../../../..';
+import {Message} from '../../../../index';
 
 export interface MessageCodec {
 

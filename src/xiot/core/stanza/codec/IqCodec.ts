@@ -1,5 +1,5 @@
-import {IQQuery} from '../../../..';
-import {IQResult} from '../../../..';
+import {IQQuery} from '../../../../index';
+import {IQResult} from '../../../../index';
 
 export interface IqCodec {
 

@@ -1,7 +1,7 @@
 import {IqCodec} from '../../IqCodec';
-import {IQQuery} from '../../../../../..';
-import {IQResult} from '../../../../../..';
-import {QueryPing, ResultPing} from '../../../../../..';
+import {IQQuery} from '../../../../../../index';
+import {IQResult} from '../../../../../../index';
+import {QueryPing, ResultPing} from '../../../../../../index';
 
 export class PingCodec implements IqCodec {
 

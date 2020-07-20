@@ -1,7 +1,7 @@
 import {IqCodec} from '../../../IqCodec';
-import {IQQuery} from '../../../../../../..';
-import {IQResult} from '../../../../../../..';
-import {QueryGetChildren, ResultGetChildren} from '../../../../../../..';
+import {IQQuery} from '../../../../../../../index';
+import {IQResult} from '../../../../../../../index';
+import {QueryGetChildren, ResultGetChildren} from '../../../../../../../index';
 import {ChildCodec} from 'xiot-core-spec-ts';
 
 export class GetChildrenCodec implements IqCodec {

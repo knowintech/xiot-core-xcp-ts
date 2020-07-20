@@ -1,7 +1,7 @@
 import {IqCodec} from '../../IqCodec';
-import {IQQuery} from '../../../../../..';
-import {IQResult} from '../../../../../..';
-import {QueryByebye, ResultByebye} from '../../../../../..';
+import {IQQuery} from '../../../../../../index';
+import {IQResult} from '../../../../../../index';
+import {QueryByebye, ResultByebye} from '../../../../../../index';
 
 export class ByebyeCodec implements IqCodec {
 
