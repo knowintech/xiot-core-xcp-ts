@@ -44,16 +44,21 @@ export class Server {
         return this.serverKeyPair;
     }
 
-    answerStart(input : Map<string, object>) : Map<string, object> {
-        let result = new Map<string, object>();
+    answerStart(input : Map<string, string>) : Map<string, string> {
+        let result = new Map<string, string>();
         console.log("---------answerStart--------");
-        let devicePk = input.get("publicKey") as Uint8Array;
+        const devicePk = input.get("publicKey");
+        if (typeof devicePk === "undefined") {
+            return result;
+        }
+
+        const devicePublicKey = Base642Bin(devicePk);
 
         this.serverLocalKeyPair = getKeyPair();
 
         const c = new Curve25519();
-        this.sharedKey = c.scalarMult(this.serverLocalKeyPair.sk, devicePk);
-        console.log("server sharedKey :" + bin2base64(this.sharedKey));
+        this.sharedKey = c.scalarMult(this.serverLocalKeyPair.sk, devicePublicKey);
+        console.log("server sharedKey :" + Bin2Base64(this.sharedKey));
 
         this.verifyKey = XcpKeyCreator.create(this.sharedKey, XcpKeyType.SESSION_VERIFY_ENCRYPT_KEY);
         if (this.verifyKey == null) {
@@ -63,25 +68,25 @@ export class Server {
         console.log('server VerifyKey : ', Bin2Base64(this.verifyKey));
 
 
-        this.sessionInfo = BytesJoin(this.serverLocalKeyPair.pk, devicePk);
+        this.sessionInfo = BytesJoin(this.serverLocalKeyPair.pk, devicePublicKey);
         // console.log('SessionInfo: ', Convert.bin2base64(this.sessionInfo));
         console.log('server SessionInfo : ', Bin2Base64(this.sessionInfo));
 
         const e = new Ed25519();
         let serverSignature = e.sign(this.sessionInfo, this.serverKeyPair.sk, this.serverKeyPair.pk);
-        console.log("server signature : " + bin2base64(serverSignature));
+        console.log("server signature : " + Bin2Base64(serverSignature));
 
         const cc = new ChaCha20Poly1305(this.verifyKey);
         const encryptedSignature = cc.seal(StringToUint8Array('SV-Msg02'), serverSignature);
         console.log('device signature : ', Bin2Base64(encryptedSignature));
 
-        result.set("serverPublicKey", this.serverLocalKeyPair.pk);
-        result.set("encryptedSignature", encryptedSignature);
+        result.set("serverPublicKey", Bin2Base64(this.serverLocalKeyPair.pk));
+        result.set("encryptedSignature", Bin2Base64(encryptedSignature));
 
         return result;
     }
 
-    answerFinish(input : Map<string, object>) : Map<string, string> {
+    answerFinish(input : Map<string, string>) : Map<string, string> {
         const result = new Map<string, string>();
 
         if (this.verifyKey == null) {
@@ -92,26 +97,40 @@ export class Server {
             return result;
         }
 
-        const encryptedDeviceId = input.get("encryptedDeviceId") as Uint8Array;
-        const encryptedDeviceType = input.get("encryptedDeviceType") as Uint8Array;
-        const encryptedSign = input.get("encryptedSign") as Uint8Array;
+        const encryptedDeviceId = input.get("encryptedDeviceId");
+        if (typeof encryptedDeviceId === "undefined") {
+            return result;
+        }
+        const encDeviceId = Base642Bin(encryptedDeviceId);
 
-        if (encryptedDeviceId == null || encryptedDeviceType == null || encryptedSign == null) {
+        const encryptedDeviceType = input.get("encryptedDeviceType");
+        if (typeof encryptedDeviceType === "undefined") {
+            return result;
+        }
+        const encDeviceType = Base642Bin(encryptedDeviceType);
+
+        const encryptedSign = input.get("encryptedSign");
+        if (typeof encryptedSign === "undefined") {
+            return result;
+        }
+        const encSign = Base642Bin(encryptedSign);
+
+        if (encDeviceId == null || encDeviceType == null || encSign == null) {
             return result;
         }
 
         const cc = new ChaCha20Poly1305(this.verifyKey);
-        const sign = cc.open(StringToUint8Array('SV-Msg03'), encryptedSign);
+        const sign = cc.open(StringToUint8Array('SV-Msg03'), encSign);
 
         const cipher = new XcpClientCipherProductImpl(this.deviceType, new XcpLTSKGetterImpl(), this.serverKeyPair.pk);
         if (cipher.verify(this.sessionInfo, sign as Uint8Array)) {
             console.log("device signature verify successed!");
-            const deviceId = cc.open(StringToUint8Array('SV-Msg03'), encryptedDeviceId);
+            const deviceId = cc.open(StringToUint8Array('SV-Msg03'), encDeviceId);
             if (deviceId != null) {
                 console.log("did = " + deviceId);
             }
 
-            const deviceType = cc.open(StringToUint8Array('SV-Msg03'), encryptedDeviceType);
+            const deviceType = cc.open(StringToUint8Array('SV-Msg03'), encDeviceType);
             if (deviceType != null) {
                 console.log("type = " + deviceType);
             }
