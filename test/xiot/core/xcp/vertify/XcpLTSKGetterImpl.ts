@@ -1,11 +1,13 @@
-import {Base642Bin, Curve25519, KeyPair, Random, XcpLTSKGetter} from "../../../../../src";
+import {Base642Bin, Curve25519, KeyPair, Random, XcpLTSKGetter} from '../../../../../src';
 
-export class XcpLTSKGetterImpl implements XcpLTSKGetter{
+export class XcpLTSKGetterImpl implements XcpLTSKGetter {
 
-    private keyPair : KeyPair;
+    private keyPair: KeyPair;
 
     constructor() {
-        this.keyPair = new KeyPair(Base642Bin("dPeZzV0P8GecYt/mn8tjzPVzaP1fCchxz0H6Xv1q7r0="), Base642Bin("CN3qzfNSIiO0zB3sF3F0sLNZpVBxFV9qwtsY5JSXOkY="));
+        const deviceLTPK = 'dPeZzV0P8GecYt/mn8tjzPVzaP1fCchxz0H6Xv1q7r0=';
+        const deviceLTSK = 'CN3qzfNSIiO0zB3sF3F0sLNZpVBxFV9qwtsY5JSXOkY=';
+        this.keyPair = new KeyPair(Base642Bin(deviceLTPK), Base642Bin(deviceLTSK));
     }
 
     getDeviceKeypair(deviceId: string): KeyPair {
