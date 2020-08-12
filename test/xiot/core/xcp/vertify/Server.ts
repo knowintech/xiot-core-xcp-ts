@@ -7,7 +7,7 @@ import {
     Ed25519,
     KeyPair,
     StringToUint8Array,
-    XcpClientCipherProductImpl
+    XcpClientCipherProductImpl, XcpLTSKGetter
 } from '../../../../../src';
 import {getKeyPair} from './util';
 import bin2base64 = Convert.bin2base64;
@@ -68,9 +68,9 @@ export class Server {
         console.log('server VerifyKey : ', Bin2Base64(this.verifyKey));
 
 
-        this.sessionInfo = BytesJoin(this.serverLocalKeyPair.pk, devicePublicKey);
+        this.sessionInfo = BytesJoin(devicePublicKey, this.serverLocalKeyPair.pk);
         // console.log('SessionInfo: ', Convert.bin2base64(this.sessionInfo));
-        console.log('server SessionInfo : ', Bin2Base64(this.sessionInfo));
+        console.log('SessionInfo : ', Bin2Base64(this.sessionInfo));
 
         const e = new Ed25519();
         const serverSignature = e.sign(this.sessionInfo, this.serverKeyPair.sk, this.serverKeyPair.pk);
@@ -78,7 +78,7 @@ export class Server {
 
         const cc = new ChaCha20Poly1305(this.verifyKey);
         const encryptedSignature = cc.seal(StringToUint8Array('SV-Msg02'), serverSignature);
-        console.log('device signature : ', Bin2Base64(encryptedSignature));
+        console.log('server encryptedSignature : ', Bin2Base64(encryptedSignature));
 
         result.set('serverPublicKey', Bin2Base64(this.serverLocalKeyPair.pk));
         result.set('encryptedSignature', Bin2Base64(encryptedSignature));
@@ -87,6 +87,7 @@ export class Server {
     }
 
     answerFinish(input: Map<string, string>): Map<string, string> {
+        console.log("---------answerFinish--------");
         const result = new Map<string, string>();
 
         if (this.verifyKey == null) {
@@ -101,18 +102,19 @@ export class Server {
         if (typeof encryptedDeviceId === 'undefined') {
             return result;
         }
-        const encDeviceId = Base642Bin(encryptedDeviceId);
+        const encDeviceId = StringToUint8Array(encryptedDeviceId);
 
         const encryptedDeviceType = input.get('encryptedDeviceType');
         if (typeof encryptedDeviceType === 'undefined') {
             return result;
         }
-        const encDeviceType = Base642Bin(encryptedDeviceType);
+        const encDeviceType = StringToUint8Array(encryptedDeviceType);
 
         const encryptedSign = input.get('encryptedSign');
         if (typeof encryptedSign === 'undefined') {
             return result;
         }
+        console.log("device encryptedSign : " + encryptedSign);
         const encSign = Base642Bin(encryptedSign);
 
         if (encDeviceId == null || encDeviceType == null || encSign == null) {
@@ -121,18 +123,27 @@ export class Server {
 
         const cc = new ChaCha20Poly1305(this.verifyKey);
         const sign = cc.open(StringToUint8Array('SV-Msg03'), encSign);
+        if (sign == null) {
+            return result;
+        }
+        console.log("device signature : " + Bin2Base64(sign));
+        console.log("sessionInfo : " + Bin2Base64(this.sessionInfo));
+        console.log(("device public key : " + Bin2Base64(this.deviceKeyPair.pk)));
 
-        const cipher = new XcpClientCipherProductImpl(this.deviceType, new XcpLTSKGetterImpl(), this.serverKeyPair.pk);
-        if (cipher.verify(this.sessionInfo, sign as Uint8Array)) {
+        const getter = new XcpLTSKGetterImpl();
+
+        const e = new Ed25519();
+        if (e.verify(this.sessionInfo, this.deviceKeyPair.pk, sign)) {
+        // if (true) {
             console.log('device signature verify successed!');
             const deviceId = cc.open(StringToUint8Array('SV-Msg03'), encDeviceId);
             if (deviceId != null) {
-                console.log('did = ' + deviceId);
+                console.log('did = ' + Bin2Base64(deviceId));
             }
 
             const deviceType = cc.open(StringToUint8Array('SV-Msg03'), encDeviceType);
             if (deviceType != null) {
-                console.log('type = ' + deviceType);
+                console.log('type = ' + Bin2Base64(deviceType));
             }
             result.set('msg', 'success');
         } else {
