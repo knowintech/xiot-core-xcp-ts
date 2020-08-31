@@ -11,8 +11,7 @@ import {Base642Bin, Bin2Base64, BytesJoin, StringToUint8Array} from '../utils/Ui
 import {ChaCha20Poly1305} from '@stablelib/chacha20poly1305';
 import {IQResult, QueryInitialize, QueryVerifyFinish, QueryVerifyStart, ResultVerifyFinish, ResultVerifyStart} from '../../../..';
 // import * as NodeRSA from 'node-rsa';
- import {Curve25519, Random} from '../utils/mipher/dist';
-
+import {Curve25519, Random} from '../utils/mipher/dist';
 
 
 export class XcpClientVerifierImpl implements XcpClientVerifier {
@@ -39,14 +38,12 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
     }
 
     private generateKeyPair(): KeyPair {
-      const random = new Random();
-      const c = new Curve25519();
-      const seed = random.get(32);
-      // const seed = this.getNum();
-      const k = c.generateKeys(seed);
-      return new KeyPair(k.pk, k.sk);
-
-
+        const random = new Random();
+        const c = new Curve25519();
+        const seed = random.get(32);
+        // const seed = this.getNum();
+        const k = c.generateKeys(seed);
+        return new KeyPair(k.pk, k.sk);
     }
 
     private verifyStart(keyPair: KeyPair): Promise<Uint8Array> {
@@ -72,7 +69,7 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
 
         const c = new Curve25519();
         this.sharedKey = c.scalarMult(keyPair.sk, serverPublicKey);
-       //  this.sharedKey = new Uint8Array(32);
+        //  this.sharedKey = new Uint8Array(32);
         // console.log('SharedKey: ', Convert.bin2base64(this.sharedKey));
         console.log('SharedKey: ', Bin2Base64(this.sharedKey));
 
@@ -101,25 +98,38 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
             throw new Error('decode serverSignature failed, serverSignature is null');
         }
 
-        if (!this.cipher.verify(this.sessionInfo, serverSignature)) {
-            console.log('server signature verified failed');
-            throw new Error('server signature verified failed');
-        }
+        return new Promise<XcpSessionKey>((resolve, reject) => {
+            if (this.sessionInfo == null){
+                reject('sessionInfo is null')
+                return ;
+            }
 
-        const signature = this.cipher.sign(this.sessionInfo);
-        // const encryptedSignature = Convert.bin2base64(cc.seal(StringToUint8Array('SV-Msg03'), signature));
-        // console.log('device signature: ', Convert.bin2base64(signature));
-        const encryptedSignature = Bin2Base64(cc.seal(StringToUint8Array('SV-Msg03'), signature));
-        console.log('device signature: ', Bin2Base64(signature));
+            this.cipher.verify(this.sessionInfo, serverSignature).then(result => {
+                if (!result) {
+                    console.log('server signature verified failed');
+                    reject('server signature verified failed');
+                    return ;
+                }
 
-        // const deviceId = Convert.bin2base64(cc.seal(StringToUint8Array('SV-Msg03'), StringToUint8Array(this.client.getDeviceId())));
-        // const deviceType = Convert.bin2base64(cc.seal(StringToUint8Array('SV-Msg03'), StringToUint8Array(this.client.getDeviceType())));
-        const deviceId = Bin2Base64(cc.seal(StringToUint8Array('SV-Msg03'), StringToUint8Array(this.client.getDeviceId())));
-        const deviceType = Bin2Base64(cc.seal(StringToUint8Array('SV-Msg03'), StringToUint8Array(this.client.getDeviceType())));
-        const id = this.client.getNextStanzaId();
-        const frameCodecType = XcpFrameCodecTypeToNumber(this.codec);
-        const query = new QueryVerifyFinish(id, deviceId, deviceType, encryptedSignature, frameCodecType);
-        return this.client.sendQuery(query).then(x => this.parseResultVerifyFinish(x));
+                if (this.sessionInfo == null){
+                    reject('sessionInfo is null')
+                    return ;
+                }
+
+                this.cipher.sign(this.sessionInfo).then(signature => {
+                    const encryptedSignature = Bin2Base64(cc.seal(StringToUint8Array('SV-Msg03'), signature));
+                    console.log('device signature: ', Bin2Base64(signature));
+                    const deviceId = Bin2Base64(cc.seal(StringToUint8Array('SV-Msg03'), StringToUint8Array(this.client.getDeviceId())));
+                    const deviceType = Bin2Base64(cc.seal(StringToUint8Array('SV-Msg03'), StringToUint8Array(this.client.getDeviceType())));
+                    const id = this.client.getNextStanzaId();
+                    const frameCodecType = XcpFrameCodecTypeToNumber(this.codec);
+                    const query = new QueryVerifyFinish(id, deviceId, deviceType, encryptedSignature, frameCodecType);
+                    this.client.sendQuery(query).then(x => this.parseResultVerifyFinish(x)).then((res) => {
+                        resolve(res);
+                    });
+                });
+            });
+        });
     }
 
     private parseResultVerifyFinish(x: IQResult): XcpSessionKey {

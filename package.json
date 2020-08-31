@@ -1,6 +1,6 @@
 {
   "name": "xiot-core-xcp-ts",
-  "version": "0.40.0",
+  "version": "0.41.0",
   "description": "XCP Protocol",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -33,6 +33,7 @@
     "@stablelib/sha512": "^1.0.0",
     "buffer": "^5.2.1",
     "crypto-js": "^4.0.0",
+    "noble-ed25519": "^1.0.1",
     "xiot-core-spec-ts": "^0.40.0"
   },
   "devDependencies": {

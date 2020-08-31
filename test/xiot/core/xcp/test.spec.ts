@@ -1,15 +1,64 @@
-import { expect } from 'chai';
+import {expect} from 'chai';
 import 'mocha';
 import * as fs from 'async-file';
+import {Device} from './vertify/Device';
+import * as ed from 'noble-ed25519';
+import {Convert, Curve25519, Ed25519, Random} from '../../../../src/xiot/core/xcp/utils/mipher/dist';
+import {Base642Bin, Bin2Base64, BytesJoin, StringToUint8Array, XcpClientCipherProductImpl,} from '../../../../src';
+import {XcpKeyCreator} from '../../../../src/xiot/core/xcp/key/XcpKeyCreator';
+import {XcpKeyType} from '../../../../src/xiot/core/xcp/key/XcpKeyType';
+import {ChaCha20Poly1305} from '@stablelib/chacha20poly1305';
+import base642bin = Convert.base642bin;
+import {XcpLTSKGetterImpl} from './vertify/XcpLTSKGetterImpl';
 
 describe('test', async () => {
+    let c = new Curve25519();
+    const seed = Base642Bin('mzDb6gbmzaXVqjSqSsxl17Bh33pJODTC3SBcEQSNsQo=');
+    let deviceKeyPair = c.generateKeys(seed);
+    console.log('privateKey: ', Bin2Base64(deviceKeyPair.sk));
+    console.log('publicKey: ', Bin2Base64(deviceKeyPair.pk));
+    const serverPk = Base642Bin('deAjodec9A3+oe6ipnc8XtXILfwYCn21fIzs6Moa+CY=');
+    const serverPublicKey = '8C4h7Goi0rEF0/4PtLusQ52X18OBn+CZWVJsSTT58nc=';
+    const encryptedSignature = 'KPNQ7lvwOVZDzpX6XTeuSIHprfZ1uzTaTrh4MM5S+PItgUKwyLArcmWnhNBrYghYfzYxr1/rJliv4Zt9rzo4yZiK3Zil9j/k15BrgdH/BAo=';
+    const sessionInfo = BytesJoin(deviceKeyPair.pk, Base642Bin(serverPublicKey));
+    const encryptedSignatureDecoded = Base642Bin(encryptedSignature);
+    const sharedKey = c.scalarMult(deviceKeyPair.sk, Base642Bin(serverPublicKey));
+    console.log("deviceSharedKey: ",Bin2Base64(sharedKey))
+    let verifyKey = XcpKeyCreator.create(sharedKey, XcpKeyType.SESSION_VERIFY_ENCRYPT_KEY);
+    const cc = new ChaCha20Poly1305(verifyKey);
+    const serverSignature = cc.open(StringToUint8Array('SV-Msg02'), encryptedSignatureDecoded);
+    if (serverSignature == null){
+        console.log("serverSignature fail")
+        return ;
+    }
+    let getter = new XcpLTSKGetterImpl();
+    let cipher = new XcpClientCipherProductImpl("a",getter,serverPk);
+    cipher.verify(sessionInfo,serverSignature).then((res) =>{
+        if (!res){
+            return ;
+        }
+        cipher.sign(sessionInfo)
+            .then(signature =>{
+                const encryptedSignature = cc.seal(StringToUint8Array('SV-Msg03'), signature);
+                const encryptedType = cc.seal(StringToUint8Array('SV-Msg03'), StringToUint8Array('type'));
+                console.log('encryptedSign:', Bin2Base64(encryptedSignature));
+                console.log('encryptedDeviceType: ', Bin2Base64(encryptedType));
+                console.log('encryptedDeviceId: ', Bin2Base64(encryptedType));
+                console.log('sign: ', Bin2Base64(signature));
+                ed.verify(signature, sessionInfo, getter.getTypeKeyPair('aa').pk)
+                    .then((res) => {
+                        console.log(res)
+                        expect(res).to.equal(true);
+                    })
+            })
+    })
 
-    console.log(11276451583)
-    it('test', () => {
-        expect(true).to.equal(true);
+    ed.verify(serverSignature,sessionInfo,serverPk).then((res) => {
+        console.log("server signature verify: ",res)
+        console.log('sessionInfo: ', Bin2Base64(sessionInfo));
     });
-
     expect(true).to.equal(true);
+});
 
     // const deviceKeyPair = getKeyPair();
     // console.log('device pk : ', Bin2Base64(deviceKeyPair.pk));
@@ -20,7 +69,6 @@ describe('test', async () => {
     // console.log('server pk : ', Bin2Base64(serverKeyPair.pk));
     // console.log('server sk : ', Bin2Base64(serverKeyPair.sk));
     // const server = new Server(deviceKeyPair, serverKeyPair);
-    // const device = new Device(deviceKeyPair, serverKeyPair, getKeyPair());
     //
     // const start = device.startVertify();
     // const answerStart = server.answerStart(start);
@@ -41,5 +89,4 @@ describe('test', async () => {
     // const cc = new ChaCha20Poly1305(verifyKey);
     // const encryptedSignature = Bin2Base64(cc.seal(StringToUint8Array('SV-Msg03'), signature));
     // console.log('device encrypteSignature: ', encryptedSignature);
-});
 

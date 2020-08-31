@@ -5,8 +5,8 @@ export class XcpLTSKGetterImpl implements XcpLTSKGetter {
     private keyPair: KeyPair;
 
     constructor() {
-        const deviceLTPK = 'dPeZzV0P8GecYt/mn8tjzPVzaP1fCchxz0H6Xv1q7r0=';
-        const deviceLTSK = 'CN3qzfNSIiO0zB3sF3F0sLNZpVBxFV9qwtsY5JSXOkY=';
+        const deviceLTPK = 'mkStb3c0ji4KLVYQaGgyGO1WpBYQUmbg0j2sHhD/NF8=';
+        const deviceLTSK = 'MC4zOTYwNjM5NDk3ODE0Njc2NA==';
         this.keyPair = new KeyPair(Base642Bin(deviceLTPK), Base642Bin(deviceLTSK));
     }
 
