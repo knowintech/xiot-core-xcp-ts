@@ -22,7 +22,7 @@ export class XcpClientBase implements XcpClient {
     private resultHandlers: Map<string, (result: IQResult | null, error: IQError | null) => void>;
     private queryHandlers: Map<string, (query: IQQuery) => void>;
     private messageId = 1;
-    private verifyHandler: (result: boolean) => void = () => {};
+    private verifyHandler: (result: boolean, error?: IQError) => void = () => {};
     private disconnectHandler: () => void = () => {};
 
     constructor(serialNumber: string,
@@ -57,13 +57,13 @@ export class XcpClientBase implements XcpClient {
         this.ws.addEventListener('message', message => this.onMessage(message));
 
         return new Promise<void>((resolve, reject) => {
-            this.verifyHandler = (result) => {
+            this.verifyHandler = (result, err) => {
                 if (result) {
                     resolve();
                     return;
                 }
 
-                reject();
+                reject(err);
             };
         });
     }
@@ -129,7 +129,7 @@ export class XcpClientBase implements XcpClient {
         console.log('onConnected');
         this.startVerify('1.0')
             .then(() => this.verifyHandler(true))
-            .catch(e => this.verifyHandler(false));
+            .catch(e => this.verifyHandler(false, e));
     }
 
     private onDisconnect(): void {
@@ -223,6 +223,7 @@ export class XcpClientBase implements XcpClient {
 
         const handler = this.resultHandlers.get(error.id);
         if (handler != null) {
+            this.verifyHandler(false, error);
             handler(null, error);
             this.resultHandlers.delete(error.id);
         } else {
