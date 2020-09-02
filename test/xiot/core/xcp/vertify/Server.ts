@@ -15,8 +15,6 @@ import {XcpKeyCreator} from '../../../../../src/xiot/core/xcp/key/XcpKeyCreator'
 import {XcpKeyType} from '../../../../../src/xiot/core/xcp/key/XcpKeyType';
 import {ChaCha20Poly1305} from '@stablelib/chacha20poly1305';
 import {XcpLTSKGetterImpl} from './XcpLTSKGetterImpl';
-import * as ed from 'noble-ed25519';
-
 
 export class Server {
 
@@ -30,7 +28,7 @@ export class Server {
     private verifyKey: Uint8Array | null = null;
     private sessionInfo: Uint8Array | null = null;
 
-    constructor( serverKeyPair: KeyPair) {
+    constructor(serverKeyPair: KeyPair) {
         this.serverKeyPair = serverKeyPair;
     }
 
@@ -52,8 +50,8 @@ export class Server {
             const devicePublicKey = Base642Bin(devicePk);
 
             this.serverLocalKeyPair = getKeyPair();
-            console.log("serverPublicKey: ",Bin2Base64(this.serverLocalKeyPair.pk))
-            console.log("serverPrivateKey: ",Bin2Base64(this.serverLocalKeyPair.sk))
+            console.log('serverPublicKey: ', Bin2Base64(this.serverLocalKeyPair.pk));
+            console.log('serverPrivateKey: ', Bin2Base64(this.serverLocalKeyPair.sk));
 
             const c = new Curve25519();
             this.sharedKey = c.scalarMult(this.serverLocalKeyPair.sk, devicePublicKey);
@@ -71,17 +69,16 @@ export class Server {
             this.sessionInfo = BytesJoin(devicePublicKey, this.serverLocalKeyPair.pk);
             // console.log('SessionInfo: ', Convert.bin2base64(this.sessionInfo));
             console.log('SessionInfo : ', Bin2Base64(this.sessionInfo));
+            const ed = new Ed25519();
+            const serverSignature = ed.sign(this.sessionInfo, this.serverKeyPair.sk, this.serverKeyPair.pk);
+            console.log('server signature : ' + Bin2Base64(serverSignature));
+            const cc = new ChaCha20Poly1305(this.verifyKey);
+            const encryptedSignature = cc.seal(StringToUint8Array('SV-Msg02'), serverSignature);
+            console.log('server encryptedSignature : ', Bin2Base64(encryptedSignature));
 
-            ed.sign(this.sessionInfo, this.serverKeyPair.sk).then(serverSignature => {
-                console.log('server signature : ' + Bin2Base64(serverSignature));
-                const cc = new ChaCha20Poly1305(this.verifyKey);
-                const encryptedSignature = cc.seal(StringToUint8Array('SV-Msg02'), serverSignature);
-                console.log('server encryptedSignature : ', Bin2Base64(encryptedSignature));
-
-                result.set('serverPublicKey', Bin2Base64(this.serverLocalKeyPair.pk));
-                result.set('encryptedSignature', Bin2Base64(encryptedSignature));
-                resolve(result);
-            });
+            result.set('serverPublicKey', Bin2Base64(this.serverLocalKeyPair.pk));
+            result.set('encryptedSignature', Bin2Base64(encryptedSignature));
+            resolve(result);
         });
     }
 
@@ -99,7 +96,7 @@ export class Server {
                 reject('sessionInfo is null');
                 return;
             }
-            let deviceLtpk = input.get('deviceLtpk');
+            const deviceLtpk = input.get('deviceLtpk');
             if (!deviceLtpk) {
                 reject('deviceLtpk is null');
                 return;
@@ -143,15 +140,15 @@ export class Server {
             }
             console.log('device signature : ' + Bin2Base64(sign));
             console.log('sessionInfo : ' + Bin2Base64(this.sessionInfo));
-            ed.verify(sign,this.sessionInfo,Base642Bin(deviceLtpk)).then(res =>{
-                if (res){
-                    result.set("msg","success")
-                }else {
-                    result.set("msg","error")
+            const ed = new Ed25519();
+            const res = ed.verify(this.sessionInfo, Base642Bin(deviceLtpk), sign);
+                if (res) {
+                    result.set('msg', 'success');
+                } else {
+                    result.set('msg', 'error');
                 }
 
-                resolve(result)
-            })
+                resolve(result);
         });
 
     }

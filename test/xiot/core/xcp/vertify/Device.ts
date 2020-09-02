@@ -7,13 +7,13 @@ import {
     StringToUint8Array,
     XcpClientCipherProductImpl
 } from '../../../../../src';
+
 import {XcpLTSKGetterImpl} from './XcpLTSKGetterImpl';
 import {getKeyPair} from './util';
 import {XcpKeyCreator} from '../../../../../src/xiot/core/xcp/key/XcpKeyCreator';
 import {XcpKeyType} from '../../../../../src/xiot/core/xcp/key/XcpKeyType';
 import {ChaCha20Poly1305} from '@stablelib/chacha20poly1305';
 import {XcpClientCipher} from '../../../../../src/xiot/core/xcp/XcpClientCipher';
-import * as ed from 'noble-ed25519';
 
 
 export class Device {
@@ -25,7 +25,7 @@ export class Device {
     private getter: XcpLTSKGetterImpl;
 
 
-    constructor( serverLTPK: Uint8Array, deviceLocalKeyPair: KeyPair) {
+    constructor(serverLTPK: Uint8Array, deviceLocalKeyPair: KeyPair) {
         this.deviceLocalKeyPair = deviceLocalKeyPair;
         this.getter = new XcpLTSKGetterImpl();
         this.cipher = new XcpClientCipherProductImpl(this.deviceType, this.getter, serverLTPK);
@@ -50,7 +50,7 @@ export class Device {
             }
             const serverPublicKey = Base642Bin(serverPk);
 
-            var s = input.get('encryptedSignature');
+            const s = input.get('encryptedSignature');
             if (typeof s === 'undefined') {
                 return result;
             }
@@ -83,21 +83,21 @@ export class Device {
             const serverSignature = cc.open(StringToUint8Array('SV-Msg02'), encryptedServerSignature);
             if (serverSignature == null) {
                 console.log('decode serverSignature failed, serverSignature is null');
-               reject('decode serverSignature failed, serverSignature is null');
-               return ;
+                reject('decode serverSignature failed, serverSignature is null');
+                return;
             }
 
             console.log('server serverSignature : ' + Bin2Base64(serverSignature));
             this.cipher.verify(sessionInfo, serverSignature).then(res => {
                     if (res) {
-                        ed.sign(sessionInfo, this.getter.getDeviceKeypair('sdf').sk)
-                            .then((signature) => {
+                        const ed = new Ed25519();
+                        const deviceKeypair = this.getter.getDeviceKeypair('sdf');
+                        const signature = ed.sign(sessionInfo, deviceKeypair.sk, deviceKeypair.pk);
                                 console.log('device signature: ', Bin2Base64(signature));
                                 // console.log('device signature: ', Convert.bin2base64(signature));
                                 const encryptedSignature = cc.seal(StringToUint8Array('SV-Msg03'), signature);
                                 result.set('encryptedSign', Bin2Base64(encryptedSignature));
                                 resolve(result);
-                            });
                     } else {
                         console.log('server signature verified failed');
                         reject('server signature verified failed');

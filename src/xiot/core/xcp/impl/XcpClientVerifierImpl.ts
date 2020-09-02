@@ -10,7 +10,6 @@ import {XcpKeyType} from '../key/XcpKeyType';
 import {Base642Bin, Bin2Base64, BytesJoin, StringToUint8Array} from '../utils/Uint8ArrayUtils';
 import {ChaCha20Poly1305} from '@stablelib/chacha20poly1305';
 import {IQQuery, IQResult, QueryInitialize, QueryVerifyFinish, QueryVerifyStart, ResultVerifyFinish, ResultVerifyStart} from '../../../..';
-// import * as NodeRSA from 'node-rsa';
 import {Curve25519, Random} from '../utils/mipher/dist';
 
 
@@ -98,7 +97,11 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
     }
 
     private sign(sessionInfo: Uint8Array | null = null): Promise<Uint8Array> {
-        return this.sign(sessionInfo);
+        if (sessionInfo == null){
+            return Promise.reject('sessionInfo is null');
+        }
+
+        return this.cipher.sign(sessionInfo);
     }
 
     private verify(sessionInfo: Uint8Array, serverSignature: Uint8Array): Promise<boolean> {

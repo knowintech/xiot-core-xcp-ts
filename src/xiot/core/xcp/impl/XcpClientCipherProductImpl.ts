@@ -1,7 +1,7 @@
 import {XcpClientCipher} from '../XcpClientCipher';
 import {XcpAuthenticationType} from '../common/XcpAuthenticationType';
 import {XcpLTSKGetter} from '../XcpLTSKGetter';
-import * as ed25519 from 'noble-ed25519';
+import {Ed25519} from '../utils/mipher/dist';
 
 export class XcpClientCipherProductImpl implements XcpClientCipher {
 
@@ -18,11 +18,27 @@ export class XcpClientCipherProductImpl implements XcpClientCipher {
 
     sign(info: Uint8Array): Promise<Uint8Array> {
         const keypair = this.getter.getTypeKeyPair(this.deviceType);
-        return ed25519.sign(info, keypair.sk);
+        const ed25519 = new Ed25519();
+        return new Promise<Uint8Array>((resolve, reject) => {
+            const res = ed25519.sign(info, keypair.sk, keypair.pk);
+            if (!res) {
+                reject('sign error');
+            } else {
+                resolve(res);
+            }
+        });
+
     }
 
-
     verify(info: Uint8Array, signature: Uint8Array): Promise<boolean> {
-        return ed25519.verify(signature, info, this.serverLTPK);
+        const ed25519 = new Ed25519();
+        return new Promise<boolean>((resolve, reject) => {
+            const res = ed25519.verify(info, this.serverLTPK, signature);
+            if (!res) {
+                reject('verify error');
+            } else {
+                resolve(res);
+            }
+        });
     }
 }

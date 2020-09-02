@@ -2,7 +2,6 @@ import {expect} from 'chai';
 import 'mocha';
 import * as fs from 'async-file';
 import {Device} from './vertify/Device';
-import * as ed from 'noble-ed25519';
 import {Convert, Curve25519, Ed25519, Random} from '../../../../src/xiot/core/xcp/utils/mipher/dist';
 import {Base642Bin, Bin2Base64, BytesJoin, StringToUint8Array, XcpClientCipherProductImpl,} from '../../../../src';
 import {XcpKeyCreator} from '../../../../src/xiot/core/xcp/key/XcpKeyCreator';
@@ -10,8 +9,7 @@ import {XcpKeyType} from '../../../../src/xiot/core/xcp/key/XcpKeyType';
 import {ChaCha20Poly1305} from '@stablelib/chacha20poly1305';
 import base642bin = Convert.base642bin;
 import {XcpLTSKGetterImpl} from './vertify/XcpLTSKGetterImpl';
-
-describe('test', async () => {
+describe('test',  () => {
     let c = new Curve25519();
     const seed = Base642Bin('mzDb6gbmzaXVqjSqSsxl17Bh33pJODTC3SBcEQSNsQo=');
     let deviceKeyPair = c.generateKeys(seed);
@@ -33,10 +31,13 @@ describe('test', async () => {
     }
     let getter = new XcpLTSKGetterImpl();
     let cipher = new XcpClientCipherProductImpl("a",getter,serverPk);
+    let e = new Ed25519();
     cipher.verify(sessionInfo,serverSignature).then((res) =>{
         if (!res){
             return ;
         }
+        let sign = e.sign(sessionInfo, Base642Bin('MC4zOTYwNjM5NDk3ODE0Njc2NA=='), getter.getTypeKeyPair('aa').pk);
+        console.log(sign)
         cipher.sign(sessionInfo)
             .then(signature =>{
                 const encryptedSignature = cc.seal(StringToUint8Array('SV-Msg03'), signature);
@@ -45,17 +46,14 @@ describe('test', async () => {
                 console.log('encryptedDeviceType: ', Bin2Base64(encryptedType));
                 console.log('encryptedDeviceId: ', Bin2Base64(encryptedType));
                 console.log('sign: ', Bin2Base64(signature));
-                ed.verify(signature, sessionInfo, getter.getTypeKeyPair('aa').pk)
-                    .then((res) => {
-                        console.log(res)
-                        expect(res).to.equal(true);
-                    })
-            })
-    })
+                let b = e.verify(sessionInfo, getter.getTypeKeyPair('aa').pk, sign);
+                console.log(b);
 
-    ed.verify(serverSignature,sessionInfo,serverPk).then((res) => {
-        console.log("server signature verify: ",res)
-        console.log('sessionInfo: ', Bin2Base64(sessionInfo));
+            });
+        /*ed.verify(sign, sessionInfo, getter.getTypeKeyPair('aa').pk).then((res) => {
+            console.log("server signature verify: ",res)
+            console.log('sessionInfo: ', Bin2Base64(sessionInfo));
+        });*/
     });
     expect(true).to.equal(true);
 });
