@@ -98,7 +98,11 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
     }
 
     private sign(sessionInfo: Uint8Array | null = null): Promise<Uint8Array> {
-        return this.sign(sessionInfo);
+        if (sessionInfo == null){
+            return Promise.reject('sessionInfo is null');
+        }
+
+        return this.cipher.sign(sessionInfo);
     }
 
     private verify(sessionInfo: Uint8Array, serverSignature: Uint8Array): Promise<boolean> {

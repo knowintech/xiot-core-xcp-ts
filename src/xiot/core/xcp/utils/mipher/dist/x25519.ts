@@ -939,7 +939,7 @@ export class Ed25519 implements Signature {
     let p = [CURVE.gf(), CURVE.gf(), CURVE.gf(), CURVE.gf()];
     let h = this.sha512.hash(sk);
 
-    if (sk.length !== 32) return;
+    // if (sk.length !== 32) return;
     if (pk.length !== 32) return;
 
     h[ 0] &= 0xf8;
