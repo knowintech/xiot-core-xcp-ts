@@ -15,7 +15,6 @@ import {XcpKeyType} from '../../../../../src/xiot/core/xcp/key/XcpKeyType';
 import {ChaCha20Poly1305} from '@stablelib/chacha20poly1305';
 import {XcpClientCipher} from '../../../../../src/xiot/core/xcp/XcpClientCipher';
 
-
 export class Device {
 
     private deviceId = '1@313';
@@ -23,7 +22,6 @@ export class Device {
     private deviceLocalKeyPair: KeyPair;
     private cipher: XcpClientCipher;
     private getter: XcpLTSKGetterImpl;
-
 
     constructor(serverLTPK: Uint8Array, deviceLocalKeyPair: KeyPair) {
         this.deviceLocalKeyPair = deviceLocalKeyPair;
@@ -105,7 +103,6 @@ export class Device {
                 }
             );
         }));
-
     }
 
     getFinishAnswer(input: Map<string, string>) {
@@ -114,5 +111,4 @@ export class Device {
         console.log(msg);
         return msg;
     }
-
 }

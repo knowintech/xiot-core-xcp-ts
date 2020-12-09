@@ -32,7 +32,6 @@ export class Server {
         this.serverKeyPair = serverKeyPair;
     }
 
-
     getServerKeyPair(): KeyPair {
         return this.serverKeyPair;
     }
@@ -96,6 +95,7 @@ export class Server {
                 reject('sessionInfo is null');
                 return;
             }
+
             const deviceLtpk = input.get('deviceLtpk');
             if (!deviceLtpk) {
                 reject('deviceLtpk is null');
@@ -138,6 +138,7 @@ export class Server {
                 reject('sign is null');
                 return;
             }
+
             console.log('device signature : ' + Bin2Base64(sign));
             console.log('sessionInfo : ' + Bin2Base64(this.sessionInfo));
             const ed = new Ed25519();
