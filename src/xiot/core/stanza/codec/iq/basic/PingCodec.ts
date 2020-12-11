@@ -1,8 +1,7 @@
 import {IqCodec} from '../../IqCodec';
-import {IQQuery} from '../../../../../../index';
-import {IQResult} from '../../../../../../index';
-import {QueryPing, ResultPing} from '../../../../../../index';
-
+import {IQQuery} from '../../../typedef/iq/IQQuery';
+import {IQResult} from '../../../typedef/iq/IQResult';
+import {QueryPing, ResultPing} from '../../../typedef/iq/basic/Ping';
 export class PingCodec implements IqCodec {
 
     encodeQueryContent(query: IQQuery): any | null {

@@ -1,8 +1,8 @@
 import {IqCodec} from '../../../IqCodec';
-import {IQQuery} from '../../../../../../../index';
-import {IQResult} from '../../../../../../../index';
-import {QueryInvokeActions, ResultInvokeActions} from '../../../../../../../index';
 import {ActionOperationCodec} from 'xiot-core-spec-ts';
+import {IQQuery} from '../../../../typedef/iq/IQQuery';
+import {QueryInvokeActions, ResultInvokeActions} from '../../../../typedef/iq/device/control/InvokeActions';
+import {IQResult} from '../../../../typedef/iq/IQResult';
 
 export class InvokeActionsCodec implements IqCodec {
 

@@ -1,7 +1,7 @@
 import {IqCodec} from '../../../IqCodec';
-import {IQQuery} from '../../../../../../../index';
-import {IQResult} from '../../../../../../../index';
-import {QueryGetAccessKey, ResultGetAccessKey} from '../../../../../../../index';
+import {IQQuery} from '../../../../typedef/iq/IQQuery';
+import {IQResult} from '../../../../typedef/iq/IQResult';
+import {QueryGetAccessKey, ResultGetAccessKey} from '../../../../typedef/iq/device/key/GetAccessKey';
 
 export class GetAccessKeyCodec implements IqCodec {
 

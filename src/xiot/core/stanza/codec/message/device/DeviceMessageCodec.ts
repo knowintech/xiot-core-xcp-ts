@@ -1,6 +1,7 @@
-import {DeviceMessage, Message} from '../../../../../../index';
 import {MessageCodec} from '../../MessageCodec';
 import {DeviceRecordCodec, DeviceRecordTypeFromString} from 'xiot-core-spec-ts';
+import {Message} from '../../../typedef/message/Message';
+import {DeviceMessage} from '../../../typedef/message/device/DeviceMessage';
 
 export class DeviceMessageCodec implements MessageCodec {
 

@@ -1,20 +1,10 @@
-import {
-    Base642Bin,
-    Bin2Base64,
-    BytesJoin,
-    Convert,
-    Curve25519,
-    Ed25519,
-    KeyPair,
-    StringToUint8Array,
-    XcpClientCipherProductImpl, XcpLTSKGetter
-} from '../../../../../src';
 import {getKeyPair} from './util';
-import bin2base64 = Convert.bin2base64;
-import {XcpKeyCreator} from '../../../../../src/xiot/core/xcp/key/XcpKeyCreator';
-import {XcpKeyType} from '../../../../../src/xiot/core/xcp/key/XcpKeyType';
+import {XcpKeyCreator} from '../../../../../../src/xiot/core/xcp/key/XcpKeyCreator';
+import {XcpKeyType} from '../../../../../../src/xiot/core/xcp/key/XcpKeyType';
 import {ChaCha20Poly1305} from '@stablelib/chacha20poly1305';
-import {XcpLTSKGetterImpl} from './XcpLTSKGetterImpl';
+import {KeyPair} from '../../../../../../src/xiot/core/xcp/KeyPair';
+import {Base642Bin, Bin2Base64, BytesJoin, StringToUint8Array} from '../../../../../../src/xiot/core/xcp/utils/Uint8ArrayUtils';
+import {Curve25519, Ed25519} from '../../../../../src/xiot/core/xcp/utils/mipher/dist';
 
 export class Server {
 

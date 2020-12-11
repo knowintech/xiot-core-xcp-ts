@@ -2,7 +2,8 @@ import { expect } from 'chai';
 import {diff} from 'yajsondiff';
 import 'mocha';
 import * as fs from 'async-file';
-import {StanzaCodec} from '../../../../../src';
+import {StanzaCodec} from '../../../../../src/xiot/core/stanza/codec/StanzaCodec';
+
 
 describe('StanzaCodec', async () => {
 

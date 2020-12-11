@@ -1,4 +1,6 @@
-import {Base642Bin, Curve25519, KeyPair, Random, XcpLTSKGetter} from '../../../../../src';
+import {XcpLTSKGetter} from '../../../../../../src/xiot/core/xcp/XcpLTSKGetter';
+import {KeyPair} from '../../../../../../src/xiot/core/xcp/KeyPair';
+import {Base642Bin} from '../../../../../../src/xiot/core/xcp/utils/Uint8ArrayUtils';
 
 export class XcpLTSKGetterImpl implements XcpLTSKGetter {
 

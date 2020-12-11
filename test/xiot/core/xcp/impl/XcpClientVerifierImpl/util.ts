@@ -1,5 +1,5 @@
 import {Curve25519, Random} from '../../../../../src/xiot/core/xcp/utils/mipher/dist';
-import {Base642Bin, Bin2Base64, KeyPair} from '../../../../../src';
+import {KeyPair} from '../../../../../../src/xiot/core/xcp/KeyPair';
 
 export function getKeyPair(): KeyPair {
     const random = new Random();

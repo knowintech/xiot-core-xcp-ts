@@ -1,4 +1,7 @@
-import {IQError, IQQuery, IQResult, Message} from '../../..';
+import {IQQuery} from '../stanza/typedef/iq/IQQuery';
+import {IQResult} from '../stanza/typedef/iq/IQResult';
+import {IQError} from '../stanza/typedef/iq/IQError';
+import {Message} from '../stanza/typedef/message/Message';
 
 export interface XcpClient {
 

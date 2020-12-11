@@ -1,4 +1,4 @@
-import {Message} from '../../../../index';
+import {Message} from '../typedef/message/Message';
 
 export interface MessageCodec {
 

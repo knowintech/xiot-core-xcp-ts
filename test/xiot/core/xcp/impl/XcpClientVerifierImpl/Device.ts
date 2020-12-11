@@ -1,19 +1,13 @@
-import {
-    Base642Bin,
-    Bin2Base64,
-    BytesJoin,
-    Curve25519, Ed25519,
-    KeyPair, Random,
-    StringToUint8Array,
-    XcpClientCipherProductImpl
-} from '../../../../../src';
-
 import {XcpLTSKGetterImpl} from './XcpLTSKGetterImpl';
 import {getKeyPair} from './util';
-import {XcpKeyCreator} from '../../../../../src/xiot/core/xcp/key/XcpKeyCreator';
-import {XcpKeyType} from '../../../../../src/xiot/core/xcp/key/XcpKeyType';
+import {XcpKeyCreator} from '../../../../../../src/xiot/core/xcp/key/XcpKeyCreator';
+import {XcpKeyType} from '../../../../../../src/xiot/core/xcp/key/XcpKeyType';
 import {ChaCha20Poly1305} from '@stablelib/chacha20poly1305';
-import {XcpClientCipher} from '../../../../../src/xiot/core/xcp/XcpClientCipher';
+import {XcpClientCipher} from '../../../../../../src/xiot/core/xcp/XcpClientCipher';
+import {KeyPair} from '../../../../../../src/xiot/core/xcp/KeyPair';
+import {XcpClientCipherProductImpl} from '../../../../../../src/xiot/core/xcp/impl/XcpClientCipherProductImpl';
+import {Base642Bin, Bin2Base64, BytesJoin, StringToUint8Array} from '../../../../../../src/xiot/core/xcp/utils/Uint8ArrayUtils';
+import {Curve25519, Ed25519} from 'mipher-ts';
 
 export class Device {
 
@@ -107,7 +101,7 @@ export class Device {
 
     getFinishAnswer(input: Map<string, string>) {
         console.log('---------getFinishAnswer--------');
-        let msg = input.get('msg');
+        const msg = input.get('msg');
         console.log(msg);
         return msg;
     }

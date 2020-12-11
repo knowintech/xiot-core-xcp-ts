@@ -9,8 +9,12 @@ import {XcpKeyCreator} from '../key/XcpKeyCreator';
 import {XcpKeyType} from '../key/XcpKeyType';
 import {Base642Bin, Bin2Base64, BytesJoin, StringToUint8Array} from '../utils/Uint8ArrayUtils';
 import {ChaCha20Poly1305} from '@stablelib/chacha20poly1305';
-import {IQQuery, IQResult, QueryInitialize, QueryVerifyFinish, QueryVerifyStart, ResultVerifyFinish, ResultVerifyStart} from '../../../..';
-import {Curve25519, Random} from '../utils/mipher/dist';
+import {QueryInitialize} from '../../stanza/typedef/iq/device/verify/Initialize';
+import {QueryVerifyStart, ResultVerifyStart} from '../../stanza/typedef/iq/device/verify/VerifyStart';
+import {IQResult} from '../../stanza/typedef/iq/IQResult';
+import {IQQuery} from '../../stanza/typedef/iq/IQQuery';
+import {QueryVerifyFinish, ResultVerifyFinish} from '../../stanza/typedef/iq/device/verify/VerifyFinish';
+import {Curve25519, Random} from 'mipher-ts';
 
 
 export class XcpClientVerifierImpl implements XcpClientVerifier {
@@ -97,7 +101,7 @@ export class XcpClientVerifierImpl implements XcpClientVerifier {
     }
 
     private sign(sessionInfo: Uint8Array | null = null): Promise<Uint8Array> {
-        if (sessionInfo == null){
+        if (sessionInfo == null) {
             return Promise.reject('sessionInfo is null');
         }
 

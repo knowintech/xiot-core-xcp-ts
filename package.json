@@ -33,6 +33,7 @@
     "@stablelib/sha512": "^1.0.0",
     "buffer": "^5.2.1",
     "crypto-js": "^4.0.0",
+    "mipher-ts": "^0.1.0",
     "xiot-core-spec-ts": "^0.51.1"
   },
   "devDependencies": {

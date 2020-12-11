@@ -1,5 +1,5 @@
-import {IQQuery} from '../../../../index';
-import {IQResult} from '../../../../index';
+import {IQQuery} from '../typedef/iq/IQQuery';
+import {IQResult} from '../typedef/iq/IQResult';
 
 export interface IqCodec {
 

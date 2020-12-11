@@ -1,14 +1,21 @@
 import {XcpClient} from '../XcpClient';
 import {XcpClientVerifier} from '../XcpClientVerifier';
 import {XcpClientVerifierImpl} from './XcpClientVerifierImpl';
-import {XcpFrameCodecType} from '../../../..';
 import {XcpClientCipher} from '../XcpClientCipher';
-import {XcpSessionKey} from '../../../..';
 import {WebSocketBinaryFrameCodecImpl} from '../codec/WebSocketBinaryFrameCodecImpl';
 import {BinaryFrameCodec} from '../BinaryFrameCodec';
-import {Utf8ArrayToStr} from '../../../..';
-import {IQ, IQError, IQQuery, IQResult, IQType, Message, Stanza, StanzaCodec} from '../../../..';
 import {Status} from 'xiot-core-spec-ts';
+import {StanzaCodec} from '../../stanza/codec/StanzaCodec';
+import {IQResult} from '../../stanza/typedef/iq/IQResult';
+import {IQError} from '../../stanza/typedef/iq/IQError';
+import {IQQuery} from '../../stanza/typedef/iq/IQQuery';
+import {XcpFrameCodecType} from '../common/XcpFrameCodecType';
+import {Message} from '../../stanza/typedef/message/Message';
+import {Stanza} from '../../stanza/typedef/Stanza';
+import {Utf8ArrayToStr} from '../utils/Uint8ArrayUtils';
+import {IQ} from '../../stanza/typedef/iq/IQ';
+import {IQType} from '../../stanza/typedef/iq/IQType';
+import {XcpSessionKey} from '../common/XcpSessionKey';
 
 export class XcpClientBase implements XcpClient {
 

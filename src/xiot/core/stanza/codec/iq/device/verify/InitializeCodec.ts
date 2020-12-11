@@ -1,7 +1,7 @@
 import {IqCodec} from '../../../IqCodec';
-import {IQQuery} from '../../../../../../../index';
-import {IQResult} from '../../../../../../../index';
-import {QueryInitialize, ResultInitialize} from '../../../../../../../index';
+import {IQQuery} from '../../../../typedef/iq/IQQuery';
+import {QueryInitialize, ResultInitialize} from '../../../../typedef/iq/device/verify/Initialize';
+import {IQResult} from '../../../../typedef/iq/IQResult';
 
 export class InitializeCodec implements IqCodec {
 

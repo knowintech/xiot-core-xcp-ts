@@ -1,7 +1,7 @@
 import {XcpClientCipher} from '../XcpClientCipher';
 import {XcpAuthenticationType} from '../common/XcpAuthenticationType';
 import {XcpLTSKGetter} from '../XcpLTSKGetter';
-import {Ed25519} from '../utils/mipher/dist';
+import {Ed25519} from 'mipher-ts';
 
 export class XcpClientCipherProductImpl implements XcpClientCipher {
 
