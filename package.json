@@ -1,6 +1,6 @@
 {
   "name": "xiot-core-xcp-ts",
-  "version": "0.51.1",
+  "version": "0.51.2",
   "description": "XCP Protocol",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,7 +34,7 @@
     "buffer": "^5.2.1",
     "crypto-js": "^4.0.0",
     "mipher-ts": "^0.1.0",
-    "xiot-core-spec-ts": "^0.51.1"
+    "xiot-core-spec-ts": "^0.51.2"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",
